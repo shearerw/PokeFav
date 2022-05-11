@@ -34,6 +34,7 @@ if (process.argv.length != 3) {
   process.exit(1);
 }
 let portNumber = process.argv[2];
+portNumber = (process.env.PORT || portNumber);
 
 let app = express();
 app.set("views", path.resolve(__dirname, "templates"));
