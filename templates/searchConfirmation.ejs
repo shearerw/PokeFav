@@ -4,18 +4,23 @@
 
 <head>
 	<meta charset="utf-8" />
-	<title>Application Confirmation</title>
+	<title>Added Confirmation</title>
 </head>
 
 <body>
-	<h1>Applicants Data</h1>
+	<h1>Pokemon Added</h1>
 	<div>
+		<img src="<%- front %>" alt="<%- name %>"><br>
 		<strong>Name: </strong><%- name %><br>
+		<strong>Pokedex Number: </strong><%- dex %><br>
+		<strong>Height: </strong><%- height %><br>
+		<strong>Weight: </strong><%- weight %><br>
 		
-		<strong>Task completed at <%- date %></strong>
+		<hr>
+		<strong>Pokemon added at <%- date %></strong>
 		<hr>
 	</div>
-	<a href="http://localhost:<%- port %>/">HOME</a>
+	<a href="http://localhost:<%- port %>/">HOME</a> <a href ="http://localhost:<%- port %>/search">SEARCH</a>
 </body>
 
 </html>

@@ -1,0 +1,25 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+	<meta charset="utf-8" />
+	<title>Favorites</title>
+</head>
+
+<body>
+	<h1>Favorite Pokemon</h1>
+	<form action="http://localhost:<%- port %>/removeOne" method="post" onsubmit="return validate()">
+		<fieldset>
+            
+			<label><strong>Remove by Name:</strong> <input type="text" name="name"/></label>
+			<input type="submit" value="Remove"/>
+			<input type="reset" />
+			
+			</fieldset>
+			<br>
+		<%- table %>
+	<hr>
+	<a href="http://localhost:<%- port %>/">HOME</a>
+</body>
+
+</html>
