@@ -5,12 +5,15 @@
 <head>
 	<meta charset="utf-8" />
 	<title>Added Confirmation</title>
+	<link rel="icon" type="image/x-icon" href="/images/myBall.ico">
+	<link href="/css/style.css" rel="stylesheet" type="text/css">
 </head>
 
 <body>
 	<h1>Pokemon Added</h1>
 	<div>
-		<img src="<%- front %>" alt="<%- name %>"><br>
+		<img src="<%- front %>" alt="<%- name %>">
+		<img src="<%- back %>" alt="<%- name %>"><br>
 		<strong>Name: </strong><%- name %><br>
 		<strong>Pokedex Number: </strong><%- dex %><br>
 		<strong>Height: </strong><%- height %><br>
@@ -20,7 +23,9 @@
 		<strong>Pokemon added at <%- date %></strong>
 		<hr>
 	</div>
-	<a href="http://localhost:<%- port %>/">HOME</a> <a href ="http://localhost:<%- port %>/search">SEARCH</a>
+	<a href="http://localhost:<%- port %>/">HOME</a> 
+	<a href ="http://localhost:<%- port %>/search">SEARCH</a>
+	<a href  ="http://localhost:<%- port %>/viewAll">VIEW ALL</a>
 </body>
 
 </html>
