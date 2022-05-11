@@ -30,7 +30,7 @@ const client = new MongoClient(uri, {
 });
 
 if (process.argv.length != 3) {
-  console.log(`Usage summerCampServer.js PORT_NUMBER`);
+  console.log(`Usage final.js PORT_NUMBER`);
   process.exit(1);
 }
 let portNumber = process.argv[2];
@@ -38,6 +38,9 @@ let portNumber = process.argv[2];
 let app = express();
 app.set("views", path.resolve(__dirname, "templates"));
 app.set("view engine", "ejs");
+app.use(express.static(__dirname + "/public"));
+//app.use('/img', express.static(__dirname + '/Images'));
+//app.use('/css', express.static(__dirname + '/CSS'));
 
 app.get("/", function (request, response) {
   response.render("index");
@@ -51,29 +54,24 @@ app.get("/search", function (request, response) {
 
 app.use(bodyParser.urlencoded({ extended: false }));
 app.post("/searchConfirmation", function (request, response) {
-  let variables = {
-    name: "5", //json.name,
-    date: "4", //new Date(),
-    port: "3", //portNumber
-  };
   url = "https://pokeapi.co/api/v2/pokemon/" + request.body.name;
   fetch(url)
     .then((response) => response.json())
-    //.then((json) => processSearch(json))
     .then((json) => {
       if (json == undefined) {
         //  console.log(json);
-        portOnly = { port: portNumber };
+        let portOnly = { port: portNumber };
         response.render("notFound", portOnly);
       } else {
-        //console.log("your mom");
         //console.log(json.name);
-        variables = {
+        //console.log(json.sprites);
+        let variables = {
           name: json.name,
           dex: json.id,
           height: json.height,
           weight: json.weight,
           front: json.sprites.front_default,
+          back: json.sprites.back_default,
           date: new Date(),
           port: portNumber,
         };
@@ -82,65 +80,43 @@ app.post("/searchConfirmation", function (request, response) {
       }
     })
     .catch((error) => {
-      portOnly = { port: portNumber };
+      let portOnly = { port: portNumber };
       response.render("notFound", portOnly);
     });
 });
-async function ins(camper) {
+
+async function ins(pokemon) {
   try {
     await client.connect();
 
-    await insertCamper(client, databaseAndCollection, camper);
+    await insertPokemon(client, databaseAndCollection, pokemon);
   } catch (e) {
     console.error(e);
   } finally {
     await client.close();
   }
 }
-async function insertCamper(client, databaseAndCollection, newCamper) {
+async function insertPokemon(client, databaseAndCollection, newPokemon) {
   const result = await client
     .db(databaseAndCollection.db)
     .collection(databaseAndCollection.collection)
-    .insertOne(newCamper);
-}
-
-function processSearch(json) {
-  // Our response is an array of values
-  console.log("\n\n***** Values Received *****\n");
-  //console.log(json);
-  console.log(json.name);
-  console.log(json.id);
-  console.log(
-    `name: ${json.name} pokedex number: ${json.id} height: ${json.height} weight: ${json.weight}`
-  );
-  console.log(json.sprites.front_default);
-  let variables = {
-    name: "5", //json.name,
-    date: "4", //new Date(),
-    port: "3", //portNumber
-  };
-  //response.render("searchConfirmation", variables);
-  //json.forEach(entry => console.log(entry.title));
+    .insertOne(newPokemon);
 }
 
 //-------view as table--------------------------------------------------------
 app.get("/viewAll", function (request, response) {
-  console.log("here");
   let p3 = (async () => {
-    console.log("here5");
     try {
-      console.log("here 2");
       await client.connect();
       let filter = {};
       const cursor = client
         .db(databaseAndCollection.db)
         .collection(databaseAndCollection.collection)
         .find(filter);
-      let tableHTML = `<table border="1">`;
+      let tableHTML = `<table border="1" class="tbl">`;
       const result = await cursor.toArray();
-      console.log(`Found: ${result.length} movies`);
       result.forEach((ele) => {
-        tableHTML += `<tr><td rowspan="2"><img src="${ele.front}"</td><td><strong>name:</strong> ${ele.name}</td><td><strong>number:</strong> ${ele.dex}</td></tr><tr><td><strong>height:</strong> ${ele.height}</td><td><strong>weight:</strong> ${ele.weight}</td></tr>`;
+        tableHTML += `<tr><td rowspan="2"><img src="${ele.front}"</td><td><strong>name:</strong> ${ele.name}</td><td><strong>number:</strong> ${ele.dex}</td><td rowspan="2"><img src="${ele.back}"></td></tr><tr><td><strong>height:</strong> ${ele.height}</td><td><strong>weight:</strong> ${ele.weight}</td></tr>`;
       });
       tableHTML += `</table>`;
       let variables = { port: portNumber, table: tableHTML };
@@ -155,20 +131,22 @@ app.get("/viewAll", function (request, response) {
 
 //-------remove one pokemon---------------------------------------------------
 app.post("/removeOne", function (request, response) {
+  //remove the one pokemon
   (async () => {
     try {
       await client.connect();
-      console.log("***** Deleting one movie *****");
       let targetName = request.body.name;
       await deleteOne(client, databaseAndCollection, targetName);
       let variables = { port: portNumber, numApp: 1 };
-      response.render("removeConfirm", variables);
+      //response.render("removeConfirm", variables);
+      response.redirect("/viewAll");
     } catch (e) {
       console.error(e);
     } finally {
       await client.close();
     }
   })();
+  //show the table page again
 });
 
 async function deleteOne(client, databaseAndCollection, targetName) {
@@ -178,7 +156,7 @@ async function deleteOne(client, databaseAndCollection, targetName) {
     .collection(databaseAndCollection.collection)
     .deleteOne(filter);
 
-  console.log(`Documents deleted ${result.deletedCount}`);
+  //console.log(`Documents deleted ${result.deletedCount}`);
 }
 
 //-------Remove all pokemon---------------------------------------------------

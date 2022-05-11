@@ -4,6 +4,8 @@
 <head>
 	<meta charset="utf-8" />
 	<title>Search</title>
+	<link rel="icon" type="image/x-icon" href="/images/myBall.ico">
+	<link href="/css/style.css" rel="stylesheet" type="text/css">
 </head>
 
 <body>
@@ -13,7 +15,7 @@
             
 			<label><strong>Name:</strong> <input type="text" name="name"/></label><br>
 			Make sure to use all lowercase!<br>
-			<table border="1">
+			<table border="1" class="tbl">
 				<tr>
 					<th>
 						Some Popular Pokemon
@@ -32,7 +34,8 @@
 					<td>lickitung</td><td>munchlax</td>
 				</tr>
 			</table>
-			
+			<a href="https://bulbapedia.bulbagarden.net/wiki/List_of_Pok%C3%A9mon_by_National_Pok%C3%A9dex_number">More Pokemon</a>
+			<br>Please be aware that regional and deoxys forms are not accounted for
 			
 		</fieldset>
 
@@ -50,8 +53,9 @@
     			}
     		}*/
 	</script>
-	<hr>
+	<br>
 	<a href="http://localhost:<%- port %>/">HOME</a>
+	<a href="http://localhost:<%- port %>/viewAll">VIEWALL</a>
 </body>
 
 </html>

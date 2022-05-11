@@ -1,0 +1,41 @@
+html {
+    font-size: 14px;
+    background-color:#8D8741;
+    background-image:url(Cc-public_domain_mark_white.png);
+    /*This image comes from https://en.wikipedia.org/wiki/Public_Domain_Mark*/
+    background-repeat:no-repeat;
+    background-position: center;
+    background-attachment: scroll;
+    background-size:cover;
+    font-family: "Times New Roman", sans-serif; 
+    color:#1b1913
+}
+
+body{
+    font-size:rem;
+    align-content: center;
+    text-align: center;
+}
+
+.tbl{
+    margin-left:auto;
+    margin-right:auto;
+    
+}
+
+hr{
+    border-color:#BC986A;
+}
+
+table{
+    border-color:#659DBD;
+    border: #BC986A solid;
+}
+
+
+fieldset{
+    width:30rem;
+    margin-left:auto;
+    margin-right:auto;
+    border-color:#BC986A;
+}
