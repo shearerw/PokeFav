@@ -191,7 +191,7 @@ app.post("/removeConfirm", function (request, response) {
 });
 
 //-----terminal stuff---------------------------------------------------------
-http.createServer(app).listen(portNumber);
+http.createServer(app).listen(process.env.PORT || portNumber);
 process.stdout.write(
   `Web server started and running at http://localhost:${portNumber}\n`
 );
