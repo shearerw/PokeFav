@@ -12,6 +12,4 @@ YouTube Demo Video:
 
 
 Deployed At:
-
-
-INCLUDE LINK TO WHERE THIS IS DEPLOYED
+https://pokefave.herokuapp.com/
