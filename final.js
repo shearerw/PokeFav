@@ -9,6 +9,7 @@ let bodyParser = require("body-parser");
 let fetch = require("node-fetch-commonjs");
 const { response } = require("express");
 require("dotenv").config({ path: path.resolve(__dirname, "env/.env") });
+//require('db.js');
 
 let url = "https://pokeapi.co/api/v2/pokemon/";
 
@@ -23,11 +24,33 @@ const databaseAndCollection = {
 const { MongoClient, ServerApiVersion } = require("mongodb");
 const { table } = require("console");
 const uri = `mongodb+srv://${userName}:${password}@cluster0.srgzm.mongodb.net/myFirstDatabase?retryWrites=true&w=majority`;
-const client = new MongoClient(uri, {
+client = new MongoClient(uri, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
   serverApi: ServerApiVersion.v1,
 });
+
+//-----start client----
+(async () => {
+  try {
+    await client.connect();
+  } catch (e) {
+    console.error(e);
+  } finally {
+    return client
+  }
+})();
+
+
+
+
+/*MongoClient.connect(uri, { useNewUrlParser: true })
+.then(client => {
+  const dbo = client.db(databaseAndCollection.db);
+  const collection = dbo.collection(databaseAndCollection.collection);
+  app.listen(4000, () => console.info(`REST API running on port ${4000}`));
+  app.locals.collection = collection; // this line stores the collection from above so it is available anywhere in the app, after small delay.
+}).catch(error => console.error(error));*/
 
 if (process.argv.length != 3) {
   console.log(`Usage final.js PORT_NUMBER`);
@@ -94,7 +117,7 @@ async function ins(pokemon) {
   } catch (e) {
     console.error(e);
   } finally {
-    await client.close();
+    //await client.close();
   }
 }
 async function insertPokemon(client, databaseAndCollection, newPokemon) {
@@ -125,7 +148,7 @@ app.get("/viewAll", function (request, response) {
     } catch (e) {
       console.error(e);
     } finally {
-      await client.close();
+      //await client.close();
     }
   })();
 });
@@ -135,7 +158,7 @@ app.post("/removeOne", function (request, response) {
   //remove the one pokemon
   (async () => {
     try {
-      await client.connect();
+      //await client.connect();
       let targetName = request.body.name;
       await deleteOne(client, databaseAndCollection, targetName);
       let variables = { port: portNumber, numApp: 1 };
@@ -144,7 +167,7 @@ app.post("/removeOne", function (request, response) {
     } catch (e) {
       console.error(e);
     } finally {
-      await client.close();
+      //await client.close();
     }
   })();
   //show the table page again
@@ -186,16 +209,24 @@ app.post("/removeConfirm", function (request, response) {
     } catch (e) {
       console.error(e);
     } finally {
-      await client.close();
+      //await client.close();
     }
   })();
 });
+
+
+
+
 
 //-----terminal stuff---------------------------------------------------------
 http.createServer(app).listen(process.env.PORT || portNumber);
 process.stdout.write(
   `Web server started and running at http://localhost:${portNumber}\n`
 );
+
+
+
+
 let prompt = "Stop to shutdown the server: ";
 process.stdout.write(prompt);
 process.stdin.on("readable", function () {
