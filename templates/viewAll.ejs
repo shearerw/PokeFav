@@ -8,24 +8,23 @@
   </head>
 
   <body>
-    
     <fieldset>
-		<h1>Favorite Pokemon</h1>
-      <form
-        action="/removeOne"
-        method="post"
-        onsubmit="return validate()"
-      >
-        <label
-          ><strong>Remove by Name:</strong> <input type="text" name="name"
-        /></label>
+      <h1>Favorite Pokemon</h1>
+      <form action="/searchOne" method="post" onsubmit="return validate()">
+        <label><strong>Search by Name:</strong> 
+          <input type="text" name="name"/></label>
+        <input type="submit" value="Search" />
+        <input type="reset" />
+      </form>
+      <br>
+      <form action="/removeOne" method="post" onsubmit="return validate()">
+        <label><strong>Remove by Name:</strong> 
+          <input type="text" name="name"/></label>
         <input type="submit" value="Remove" />
         <input type="reset" />
-
-        <br />
-        <hr />
-        <%- table %>
       </form>
+      <hr />
+      <%- table %>
     </fieldset>
     <a href="/">HOME</a>
     <a href="/search">SEARCH</a>

@@ -1,10 +1,11 @@
 html {
     font-size: 14px;
-    background-color:#8D8741;
-    background-image:url(Cc-public_domain_mark_white.png);
-    /*This image comes from https://en.wikipedia.org/wiki/Public_Domain_Mark*/
+    /*background-color:#8D8741;*/
+    background-color: white;
+    background-image:url(/images/pixel.svg);
+    /*This image comes from https://freesvg.org/1542234092*/
     background-repeat:no-repeat;
-    background-position: center;
+    /*background-position: center;*/
     background-attachment: scroll;
     background-size:cover;
     font-family: "Times New Roman", sans-serif; 
@@ -17,6 +18,10 @@ body{
     text-align: center;
 }
 
+#semiBackground{
+    background: rgba(200, 200, 200, .65);
+}
+
 .tbl{
     margin-left:auto;
     margin-right:auto;
@@ -24,12 +29,14 @@ body{
 }
 
 hr{
-    border-color:#BC986A;
+    /*border-color:#BC986A;*/
+    border-color:darkslategrey;
 }
 
 table{
     border-color:#659DBD;
-    border: #BC986A solid;
+    /*border: #BC986A solid;*/
+    border: rgb(35, 41, 41) solid;
 }
 
 
@@ -37,5 +44,25 @@ fieldset{
     width:32rem;
     margin-left:auto;
     margin-right:auto;
-    border-color:#BC986A;
+    /*border-color:#BC986A;*/
+    background: rgba(200, 200, 200, .65);
+    border-color: darkslategrey;
 }
+
+a {
+    color: darkblue;
+    padding: .1rem .3rem;
+    text-transform: uppercase;
+  }
+  
+  a:hover {
+    background-color: rgb(131, 130, 130);
+  }
+  
+  a:active {
+    background-color: black;
+  }
+  
+  a:visited {
+    color: blue;
+  }
