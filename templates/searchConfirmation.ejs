@@ -4,25 +4,49 @@
 
 <head>
 	<meta charset="utf-8" />
-	<title>Added Confirmation</title>
+	<title>Confirmation</title>
 	<link rel="icon" type="image/x-icon" href="/images/myBall.ico">
 	<link href="/css/style.css" rel="stylesheet" type="text/css">
 </head>
 
 <body>
-	<h1>Pokemon Added</h1>
+	<h1>Pokemon</h1>
 	<div>
+		<fieldset>
 		<img src="<%- front %>" alt="<%- name %>">
 		<img src="<%- back %>" alt="<%- name %>"><br>
 		<strong>Name: </strong><%- name %><br>
 		<strong>Pokedex Number: </strong><%- dex %><br>
 		<strong>Height: </strong><%- height %><br>
 		<strong>Weight: </strong><%- weight %><br>
+		<strong>Evolution: </strong><%- evo %><br>
 		
+		<form action="/rename" method="post" onsubmit="return validate()">
+			<label><strong>Give <%- name %> a nickname:</strong> 
+			  <input type="text" name="name"/></label>
+			<input type="submit" value="Search" />
+			<input type="reset" />
+		</form>
+
+		<% if (evo != "Does Not Evolve") { %>
+			<form action="/evolve" method="post" onsubmit="return validate()">
+				<label><strong>Evolve <%- name %> into <%- evo %>:</strong> 
+				<input type="submit" value="Evolve" />
+				<input type="hidden" name="name" value=<%- name %>>
+				
+				<input type="hidden" name="toEvolve" value=<%- evo %>>
+	
+			</form>
+		<% }%>
+		
+		
+
 		<hr>
 		<strong>Pokemon added at <%- date %></strong>
 		<hr>
+		</fieldset>
 	</div>
+	
 	<a href="/">HOME</a> 
 	<a href ="/search">SEARCH</a>
 	<a href  ="/viewAll">VIEW ALL</a>
