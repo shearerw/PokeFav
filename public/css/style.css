@@ -6,7 +6,7 @@ html {
     /*This image comes from https://freesvg.org/1542234092*/
     background-repeat:no-repeat;
     /*background-position: center;*/
-    background-attachment: scroll;
+    /*background-attachment: scroll;*/
     background-size:cover;
     font-family: "Times New Roman", sans-serif; 
     color:#1b1913
