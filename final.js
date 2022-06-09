@@ -9,10 +9,11 @@ let bodyParser = require("body-parser");
 let fetch = require("node-fetch-commonjs");
 const { response } = require("express");
 require("dotenv").config({ path: path.resolve(__dirname, "env/.env") });
-//require('db.js');
 
 let url = "https://pokeapi.co/api/v2/pokemon/";
 
+/*stored in the .env file for security
+  this file is not available on the public github*/
 const userName = process.env.MONGO_DB_USERNAME;
 const password = process.env.MONGO_DB_PASSWORD;
 const database = process.env.MONGO_DB_NAME;
@@ -31,7 +32,9 @@ client = new MongoClient(uri, {
   serverApi: ServerApiVersion.v1,
 });
 
-//-----start client----
+//-----start client-----------------------------------------------------------
+/*done only once for effiency
+  the client is closed when the project is terminated*/
 (async () => {
   try {
     await client.connect();
@@ -53,9 +56,9 @@ portNumber = process.env.PORT || portNumber;
 let app = express();
 app.set("views", path.resolve(__dirname, "templates"));
 app.set("view engine", "ejs");
+/*allows for access of external files like images */
 app.use(express.static(__dirname + "/public"));
-//app.use('/img', express.static(__dirname + '/Images'));
-//app.use('/css', express.static(__dirname + '/CSS'));
+app.use(bodyParser.urlencoded({ extended: false }));
 
 app.get("/", function (request, response) {
   response.render("index");
@@ -65,17 +68,24 @@ app.get("/", function (request, response) {
 app.get("/search", function (request, response) {
   response.render("search");
 });
-
-app.use(bodyParser.urlencoded({ extended: false }));
+/*
+  user will come to this endpoint from the search page
+  request.body contains the name and form (if applicable) of a pokemon
+  searches information for the pokemon using the pokeAPI 
+  adds this information to the database and shows the user the pokemon.
+  Once the user is shown their pokemon they have the ability to evolve it
+ */
 app.post("/searchConfirmation", function (request, response) {
+  //user inputs no pokemon
+  if (request.body.name == "") {
+    response.redirect("/search");
+  }
   let fullName = request.body.name;
-  if (request.body.form != ""){
+  if (request.body.form != "") {
     fullName += `-${request.body.form}`;
-    console.log("fullname", fullName, request.body.form);
   }
   url = "https://pokeapi.co/api/v2/pokemon/" + fullName.toLowerCase();
-  let p3 = (async () => {
-    //let json = undefined;
+  (async () => {
     try {
       let res = await fetch(url);
       if (res.status == 404) {
@@ -84,68 +94,61 @@ app.post("/searchConfirmation", function (request, response) {
       }
       let json = await res.json();
 
-      //-------------may have some not found issues if there are holes in the api---
-
       //go to the species page
       specFetch = await fetch(json.species.url);
-      //console.log(specFetch);
       specJson = await specFetch.json();
-      //console.log("before evoJSON");
-      //go to the evo page
+
+      flavorText = "";
+      specJson.flavor_text_entries.forEach((ele) => {
+        //only look at flavor text that is in english
+        if (ele.language.name == "en") {
+          flavorText = ele.flavor_text;
+        }
+      });
+
+      //from species go to the evolution page
       evoFetch = await fetch(specJson.evolution_chain.url);
       evoJson = await evoFetch.json();
-      //console.log("evojson",evoJson);
-
-      // console.log("first one? evoJson.chain.evolves_to.species",evoJson.chain.evolves_to.species);
-      junkJSON = evoJson.chain.evolves_to;
+      chainJson = evoJson.chain.evolves_to;
 
       let evolutionName = "Does Not Evolve";
       //at most only the first two pokemon can evolve from a chain
       if (evoJson.chain.species.name == request.body.name.toLowerCase()) {
-        //the pokemon is the first (maybe only) pokemon in the evolution line
-        //so return the name of the pokemon next in chain or none
-        //console.log("FIRST EVO");
-        // console.log("junkjson",junkJSON);
-        if (junkJSON[0] != undefined) {
-          evolutionName = junkJSON[0].species.name;
-          //console.log("evolution name",evolutionName);
+        /*case where the pokemon is the first (maybe only) pokemon 
+          in the evolution line so return the name of the pokemon 
+          next in chain or none*/
+        if (chainJson[0] != undefined) {
+          evolutionName = chainJson[0].species.name;
         }
       } else {
         //check the next element in chain
-        //issue with deoxys here bc the speices name is"deoxys but we input "deoxys-normal"
-        if (junkJSON[0].species.name == request.body.name.toLowerCase()) {
+        if (chainJson[0].species.name == request.body.name.toLowerCase()) {
           //the pokemon is the second evolution
-          if (junkJSON[0].evolves_to[0] != undefined) {
-            evolutionName = junkJSON[0].evolves_to[0].species.name;
+          if (chainJson[0].evolves_to[0] != undefined) {
+            evolutionName = chainJson[0].evolves_to[0].species.name;
           }
-          //console.log("evo name", evolutionName);
         }
       }
 
-
-      /*console.log((evolutionName != ""));
-      console.log(request.body.from !== "");
-      console.log((evolutionName !== "") && ((request.body.form !== "")));*/
-      if((evolutionName !== "Does Not Evolve") && ((request.body.form !== ""))){
+      if (evolutionName !== "Does Not Evolve" && request.body.form !== "") {
         evolutionName += `-${request.body.form}`;
-        //console.log("herer fasdfa", evolutionName);
-        //console.log(request.body.form !== "");
-        //console.log(request.body.form !== "");
-
       }
-      //----------------------------------------------------------------------------
-      //add the pokemon's evolution to the file
+
       let variables = {
         name: json.name,
         dex: json.id,
-        height: (json.height*10),
-        weight: (json.weight/10),
+        height: json.height * 10,
+        weight: json.weight / 10,
         front: json.sprites.front_default,
         back: json.sprites.back_default,
         date: new Date(),
         evo: evolutionName,
+        flavor: flavorText,
       };
-      await ins(variables);
+      await client
+        .db(databaseAndCollection.db)
+        .collection(databaseAndCollection.collection)
+        .insertOne(variables);
 
       response.render("searchConfirmation", variables);
     } catch (e) {
@@ -154,39 +157,22 @@ app.post("/searchConfirmation", function (request, response) {
       return;
     }
   })();
-
 });
 
-async function ins(pokemon) {
-  try {
-    //await client.connect();
-
-    await insertPokemon(client, databaseAndCollection, pokemon);
-  } catch (e) {
-    console.error(e);
-  } finally {
-    //await client.close();
-  }
-}
-async function insertPokemon(client, databaseAndCollection, newPokemon) {
-  const result = await client
-    .db(databaseAndCollection.db)
-    .collection(databaseAndCollection.collection)
-    .insertOne(newPokemon);
-}
-
-//-------from viewAll we have searched for one pokemon------------------------
+//-From viewAll we have searched for one pokemon in our collection------------
+/*This function looks up the pokemon in the database then shows the user
+  information on the pokemon. From this page users are then able to evolve 
+  their pokemon */
 app.post("/searchOne", function (request, response) {
   (async () => {
     try {
-      //await client.connect();
       let filter = { name: request.body.name.toLowerCase() };
       const cursor = await client
         .db(databaseAndCollection.db)
         .collection(databaseAndCollection.collection)
         .find(filter);
       const result = await cursor.toArray();
-      //console.log(result[0]);
+
       let vars = {
         name: result[0].name,
         dex: result[0].dex,
@@ -196,29 +182,25 @@ app.post("/searchOne", function (request, response) {
         back: result[0].back,
         evo: result[0].evo,
         date: result[0].date,
+        flavor: result[0].flavor,
       };
-      //console.log(vars);
 
       response.render("searchConfirmation", vars);
     } catch (e) {
       response.render("notFound");
-    } finally {
-      //await client.close();
     }
   })();
 });
 
 //-----------evolution--------------------------------------------------------
-/*note that any pokemon that does not evolve is not given the option to evolve
+/*Searches the pokemon's evolution in the API and updates the current 
+  pokemon's information to that of its evolution.
+  Note that any pokemon that does not evolve is not given the option to evolve
   on the pokemon's page so code testing this is redundent*/
 app.post("/evolve", function (request, response) {
   url =
     "https://pokeapi.co/api/v2/pokemon/" + request.body.toEvolve.toLowerCase();
   (async () => {
-    //update the pokemon to evolve
-    //first look the evolution up with fetch
-
-    //then update the mon
     let res = await fetch(url);
     if (res.status == 404) {
       response.render("notFound");
@@ -228,51 +210,50 @@ app.post("/evolve", function (request, response) {
 
     //go to the species page
     specFetch = await fetch(json.species.url);
-    //console.log(specFetch);
     specJson = await specFetch.json();
-    //console.log("before evoJSON");
-    //go to the evo page
+
+    flavorText = "";
+    specJson.flavor_text_entries.forEach((ele) => {
+      if (ele.language.name == "en") {
+        flavorText = ele.flavor_text;
+      }
+    });
+
+    //go to the evolution page
     evoFetch = await fetch(specJson.evolution_chain.url);
     evoJson = await evoFetch.json();
-    //console.log("evojson",evoJson);
-
-    // console.log("first one? evoJson.chain.evolves_to.species",evoJson.chain.evolves_to.species);
-    junkJSON = evoJson.chain.evolves_to;
+    chainJson = evoJson.chain.evolves_to;
 
     let evolutionName = "Does Not Evolve";
     //at most only the first two pokemon can evolve from a chain
     if (evoJson.chain.species.name == request.body.toEvolve.toLowerCase()) {
       //the pokemon is the first (maybe only) pokemon in the evolution line
       //so return the name of the pokemon next in chain or none
-      //console.log("FIRST EVO");
-      // console.log("junkjson",junkJSON);
-      if (junkJSON[0] != undefined) {
-        evolutionName = junkJSON[0].species.name;
-        //console.log("evolution name",evolutionName);
+      if (chainJson[0] != undefined) {
+        evolutionName = chainJson[0].species.name;
       }
     } else {
       //check the next element in chain
-      if (junkJSON[0].species.name == request.body.toEvolve.toLowerCase()) {
+      if (chainJson[0].species.name == request.body.toEvolve.toLowerCase()) {
         //the pokemon is the second evolution
-        if (junkJSON[0].evolves_to[0] != undefined) {
-          evolutionName = junkJSON[0].evolves_to[0].species.name;
+        if (chainJson[0].evolves_to[0] != undefined) {
+          evolutionName = chainJson[0].evolves_to[0].species.name;
         }
-        //console.log("evo name", evolutionName);
       }
     }
 
     let variables = {
       name: json.name,
       dex: json.id,
-      height: (json.height*10),
-      weight: (json.weight/10),
+      height: json.height * 10,
+      weight: json.weight / 10,
       front: json.sprites.front_default,
       back: json.sprites.back_default,
       date: new Date(),
       evo: evolutionName,
+      flavor: flavorText,
     };
     let update = { $set: variables };
-    //await ins(variables);
     let filter = { name: request.body.name.toLowerCase() };
     const cursor = await client
       .db(databaseAndCollection.db)
@@ -280,11 +261,12 @@ app.post("/evolve", function (request, response) {
       .updateOne(filter, update);
 
     response.render("searchConfirmation", variables);
-
   })();
 });
 
 //-----rename-----------------------------------------------------------------
+/*currently not in production
+  renaming would require names and pokemon to be unique */
 /*app.post("/rename", function (request, response){
   (async () => {
     let upVar = {
@@ -323,10 +305,12 @@ app.post("/evolve", function (request, response) {
 });
 */
 //-------view as table--------------------------------------------------------
+/*renders all pokemon in the database into a table by iterating through the 
+  collection and adding each pokemon to the table element */
 app.get("/viewAll", function (request, response) {
   let p3 = (async () => {
     try {
-      //await client.connect();
+      //empty filter implies that all elements are selected
       let filter = {};
       const cursor = client
         .db(databaseAndCollection.db)
@@ -335,7 +319,6 @@ app.get("/viewAll", function (request, response) {
       let tableHTML = `<table border="1" class="tbl">`;
       const result = await cursor.toArray();
       result.forEach((ele) => {
-        //console.log(ele);
         tableHTML += `<tr><td rowspan="2">
         <img src="${ele.front}" alt="front sprite"></td><td>
         <strong>name:</strong> ${ele.name}</td>
@@ -345,56 +328,45 @@ app.get("/viewAll", function (request, response) {
         <td><strong>weight:</strong> ${ele.weight}kg</td></tr>`;
       });
       tableHTML += `</table>`;
-      let variables = {table: tableHTML };
+      let variables = { table: tableHTML };
       response.render("viewAll", variables);
     } catch (e) {
       console.error(e);
-    } finally {
-      //await client.close();
     }
   })();
 });
 
 //-------remove one pokemon---------------------------------------------------
+/*user gets to this from the viewAll page. 
+  the pokemon is removed from the collection and the viewAll page is reloaded 
+  without the removed pokemon */
 app.post("/removeOne", function (request, response) {
-  //remove the one pokemon
   (async () => {
     try {
-      //await client.connect();
-      let targetName = request.body.name;
-      await deleteOne(client, databaseAndCollection, targetName);
-      let variables = {numApp: 1 };
+      let filter = { name: request.body.name.toLowerCase() };
+      const result = await client
+        .db(databaseAndCollection.db)
+        .collection(databaseAndCollection.collection)
+        .deleteOne(filter);
+
       response.redirect("/viewAll");
     } catch (e) {
       console.error(e);
-    } finally {
-      //await client.close();
     }
   })();
-  //show the table page again
 });
-
-async function deleteOne(client, databaseAndCollection, targetName) {
-  let filter = { name: targetName.toLowerCase() };
-  const result = await client
-    .db(databaseAndCollection.db)
-    .collection(databaseAndCollection.collection)
-    .deleteOne(filter);
-
-  //console.log(`Documents deleted ${result.deletedCount}`);
-}
 
 //-------Remove all pokemon---------------------------------------------------
 app.get("/removeApp", function (request, response) {
   response.render("remove");
 });
-
+/*all pokemon are removed from the collection
+  this action cannot be undone */
 app.post("/removeConfirm", function (request, response) {
   //get number of entries in collection
   //remove all elements
   (async () => {
     try {
-      // await client.connect();
       const result = await client
         .db(databaseAndCollection.db)
         .collection(databaseAndCollection.collection)
@@ -406,8 +378,6 @@ app.post("/removeConfirm", function (request, response) {
       response.render("removeConfirm", variables);
     } catch (e) {
       console.error(e);
-    } finally {
-      //await client.close();
     }
   })();
 });

@@ -5,25 +5,30 @@
     <title>Favorites</title>
     <link rel="icon" type="image/x-icon" href="/images/myBall.ico" />
     <link href="/css/style.css" rel="stylesheet" type="text/css" />
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-	  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-	  <link href="https://fonts.googleapis.com/css2?family=Gideon+Roman&family=Oswald&display=swap" 
-	  	rel="stylesheet"> 
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Gideon+Roman&family=Oswald&display=swap"
+      rel="stylesheet"
+    />
   </head>
 
   <body>
     <fieldset>
       <h1>Favorite Pokemon</h1>
       <form action="/searchOne" method="post" onsubmit="return validate()">
-        <label><strong>Search by Name:</strong> 
-          <input type="text" name="name"/></label>
+        <label
+          ><strong>Search Collection: </strong> <input type="text" name="name"
+        /></label>
         <input type="submit" value="Search" />
         <input type="reset" />
       </form>
-      <br>
+      <br />
       <form action="/removeOne" method="post" onsubmit="return validate()">
-        <label><strong>Remove by Name:</strong> 
-          <input type="text" name="name"/></label>
+        <label
+          ><strong>Remove from Collection:</strong>
+          <input type="text" name="name"
+        /></label>
         <input type="submit" value="Remove" />
         <input type="reset" />
       </form>
