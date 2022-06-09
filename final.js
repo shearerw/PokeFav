@@ -68,7 +68,12 @@ app.get("/search", function (request, response) {
 
 app.use(bodyParser.urlencoded({ extended: false }));
 app.post("/searchConfirmation", function (request, response) {
-  url = "https://pokeapi.co/api/v2/pokemon/" + request.body.name.toLowerCase();
+  let fullName = request.body.name;
+  if (request.body.form != ""){
+    fullName += `-${request.body.form}`;
+    console.log("fullname", fullName, request.body.form);
+  }
+  url = "https://pokeapi.co/api/v2/pokemon/" + fullName.toLowerCase();
   let p3 = (async () => {
     //let json = undefined;
     try {
@@ -107,6 +112,7 @@ app.post("/searchConfirmation", function (request, response) {
         }
       } else {
         //check the next element in chain
+        //issue with deoxys here bc the speices name is"deoxys but we input "deoxys-normal"
         if (junkJSON[0].species.name == request.body.name.toLowerCase()) {
           //the pokemon is the second evolution
           if (junkJSON[0].evolves_to[0] != undefined) {
@@ -115,13 +121,25 @@ app.post("/searchConfirmation", function (request, response) {
           //console.log("evo name", evolutionName);
         }
       }
+
+
+      /*console.log((evolutionName != ""));
+      console.log(request.body.from !== "");
+      console.log((evolutionName !== "") && ((request.body.form !== "")));*/
+      if((evolutionName !== "Does Not Evolve") && ((request.body.form !== ""))){
+        evolutionName += `-${request.body.form}`;
+        //console.log("herer fasdfa", evolutionName);
+        //console.log(request.body.form !== "");
+        //console.log(request.body.form !== "");
+
+      }
       //----------------------------------------------------------------------------
       //add the pokemon's evolution to the file
       let variables = {
         name: json.name,
         dex: json.id,
-        height: json.height,
-        weight: json.weight,
+        height: (json.height*10),
+        weight: (json.weight/10),
         front: json.sprites.front_default,
         back: json.sprites.back_default,
         date: new Date(),
@@ -246,8 +264,8 @@ app.post("/evolve", function (request, response) {
     let variables = {
       name: json.name,
       dex: json.id,
-      height: json.height,
-      weight: json.weight,
+      height: (json.height*10),
+      weight: (json.weight/10),
       front: json.sprites.front_default,
       back: json.sprites.back_default,
       date: new Date(),
@@ -266,6 +284,44 @@ app.post("/evolve", function (request, response) {
   })();
 });
 
+//-----rename-----------------------------------------------------------------
+/*app.post("/rename", function (request, response){
+  (async () => {
+    let upVar = {
+      name: request.body.nickname.toLowerCase(),
+    };
+    let update = { $set: upVar };
+    //await ins(variables);
+    let filter = { name: request.body.name.toLowerCase() };
+    const cursor = await client
+      .db(databaseAndCollection.db)
+      .collection(databaseAndCollection.collection)
+      .updateOne(filter, update);
+
+      filter = { name: request.body.nickname.toLowerCase() };
+      const cur = await client
+        .db(databaseAndCollection.db)
+        .collection(databaseAndCollection.collection)
+        .find(filter);
+      const result = await cur.toArray();
+      //console.log(result[0]);
+      let vars = {
+        name: result[0].name,
+        dex: result[0].dex,
+        height: result[0].height,
+        weight: result[0].weight,
+        front: result[0].front,
+        back: result[0].back,
+        evo: result[0].evo,
+        date: result[0].date,
+      };
+
+      response.render("searchConfirmation", vars);
+    //response.render("searchConfirmation", variables);
+  })();
+  //response.render("notFound");
+});
+*/
 //-------view as table--------------------------------------------------------
 app.get("/viewAll", function (request, response) {
   let p3 = (async () => {
@@ -280,12 +336,13 @@ app.get("/viewAll", function (request, response) {
       const result = await cursor.toArray();
       result.forEach((ele) => {
         //console.log(ele);
-        tableHTML += `<tr><td rowspan="2"><img src="${ele.front}"</td><td>
+        tableHTML += `<tr><td rowspan="2">
+        <img src="${ele.front}" alt="front sprite"></td><td>
         <strong>name:</strong> ${ele.name}</td>
-        <td><strong>number:</strong> ${ele.dex}</td>
-        <td rowspan="2"><img src="${ele.back}"></td></tr>
-        <tr><td><strong>height:</strong> ${ele.height}</td>
-        <td><strong>weight:</strong> ${ele.weight}</td></tr>`;
+        <td><strong>height:</strong> ${ele.height}cm</td>
+        <td rowspan="2"><img src="${ele.back}" alt="back sprite"></td></tr>
+        <tr><td><strong>evolution:</strong> ${ele.evo}</td>
+        <td><strong>weight:</strong> ${ele.weight}kg</td></tr>`;
       });
       tableHTML += `</table>`;
       let variables = {table: tableHTML };

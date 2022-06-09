@@ -7,26 +7,33 @@
 	<title>Confirmation</title>
 	<link rel="icon" type="image/x-icon" href="/images/myBall.ico">
 	<link href="/css/style.css" rel="stylesheet" type="text/css">
+	<link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Gideon+Roman&family=Oswald&display=swap"
+      rel="stylesheet"
+    />
 </head>
 
 <body>
 	<h1>Pokemon</h1>
 	<div>
 		<fieldset>
-		<img src="<%- front %>" alt="<%- name %>">
-		<img src="<%- back %>" alt="<%- name %>"><br>
+		<img src="<%- front %>" alt="<%- name %> front sprite">
+		<img src="<%- back %>" alt="<%- name %> back sprite"><br>
 		<strong>Name: </strong><%- name %><br>
 		<strong>Pokedex Number: </strong><%- dex %><br>
-		<strong>Height: </strong><%- height %><br>
-		<strong>Weight: </strong><%- weight %><br>
+		<strong>Height: </strong><%- height %>cm<br>
+		<strong>Weight: </strong><%- weight %>kg<br>
 		<strong>Evolution: </strong><%- evo %><br>
 		
-		<form action="/rename" method="post" onsubmit="return validate()">
-			<label><strong>Give <%- name %> a nickname:</strong> 
-			  <input type="text" name="name"/></label>
-			<input type="submit" value="Search" />
+		<!-- <form action="/rename" method="post" onsubmit="return validate()">
+			<label><strong>Give <%- name %> a nickname:<br></strong> 
+			  <input type="text" name="nickname"/></label>
+			<input type="hidden" name="name" value=<%- name %>>
+			<input type="submit" value="Rename" />
 			<input type="reset" />
-		</form>
+		</form> -->
 
 		<% if (evo != "Does Not Evolve") { %>
 			<form action="/evolve" method="post" onsubmit="return validate()">

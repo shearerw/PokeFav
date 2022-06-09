@@ -1,33 +1,42 @@
 <!-- DO NOT MODIFY THIS FILE -->
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Remove</title>
+    <link rel="icon" type="image/x-icon" href="/images/myBall.ico" />
+    <link href="/css/style.css" rel="stylesheet" type="text/css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Gideon+Roman&family=Oswald&display=swap"
+      rel="stylesheet"
+    />
+  </head>
 
-<head>
-	<meta charset="utf-8" />
-	<title>Remove</title>
-	<link rel="icon" type="image/x-icon" href="/images/myBall.ico">
-	<link href="/css/style.css" rel="stylesheet" type="text/css">
-</head>
+  <body>
+    <h1>Removing All Pokemon</h1>
 
-<body>
-	<h1>Removing All Pokemon</h1>
-	<hr>
-	<form action="/removeConfirm" method="post" onsubmit="return validate()">
-
-		<input type="submit" value="Remove all Pokemon"/>
-		<hr>
-	</form>
-	<script>
-		function validate(){
-			if(window.confirm("Are you sure you want to remove all favorite pokemon? This action cannot be undone")){
-    				return true;
-    			} else {
-
-    				return false;
-    			}
-    		}
-	</script>
-	<a href="/">HOME</a>
-</body>
-
+    <fieldset>
+      <hr />
+      <form action="/removeConfirm" method="post" onsubmit="return validate()">
+        <input type="submit" value="Remove all Pokemon" />
+        <hr />
+      </form>
+      <script>
+        function validate() {
+          if (
+            window.confirm(
+              "Are you sure you want to remove all favorite pokemon? This action cannot be undone"
+            )
+          ) {
+            return true;
+          } else {
+            return false;
+          }
+        }
+      </script>
+    </fieldset>
+    <a href="/">HOME</a>
+  </body>
 </html>
