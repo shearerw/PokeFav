@@ -6,6 +6,10 @@
 	<title>Search</title>
 	<link rel="icon" type="image/x-icon" href="/images/myBall.ico">
 	<link href="/css/style.css" rel="stylesheet" type="text/css">
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link href="https://fonts.googleapis.com/css2?family=Gideon+Roman&family=Oswald&display=swap" 
+		rel="stylesheet"> 
 </head>
 
 <body>
@@ -14,6 +18,9 @@
 		<fieldset id="semiBackground">
             
 			<label><strong>Name:</strong> <input type="text" name="name"/></label><br>
+			<label><strong>Form:*</strong> <input type="text" name="form"/></label><br>
+			
+
 			<br>
 			<table border="1" class="tbl">
 				<tr>
@@ -35,7 +42,13 @@
 				</tr>
 			</table>
 			<a href="https://bulbapedia.bulbagarden.net/wiki/List_of_Pok%C3%A9mon_by_National_Pok%C3%A9dex_number">More Pokemon</a>
-			<br>Please be aware that regional and deoxys forms are not available from the API
+			<br>
+			*Note: the form field should be left blank for most pokemon.<br>
+			It is used to define different forms like defense form deoxys<br>
+			and to signify if a pokemon is from the alola region like alolan rattata<br>
+			example use: search: deoxys, form: defense<br>
+			example use: search: rattata, form: alola<br>
+			Please be aware that the PokeAPI is not fully up to date on gen8 pokemon as of 06/08/2022
 			
 		</fieldset>
 
