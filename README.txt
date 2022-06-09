@@ -3,8 +3,7 @@ William Shearer
 
 App Description:
 Uses the Pokemon API to search for pokemon which are added to the user's pokemon collection via a MongoDB database.
-The user is able to view and modify their pokemon, add new ones and remove old ones.
-Modifications of pokemon include adding nicknames and performing evolutions.
+The user is able to view and modify their pokemon by performing evolutions, add new ones and remove old ones.
 
 API Links:
 https://pokeapi.co/docs/v2

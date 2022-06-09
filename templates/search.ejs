@@ -1,74 +1,75 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Search</title>
+    <link rel="icon" type="image/x-icon" href="/images/myBall.ico" />
+    <link href="/css/style.css" rel="stylesheet" type="text/css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Gideon+Roman&family=Oswald&display=swap"
+      rel="stylesheet"
+    />
+  </head>
 
-<head>
-	<meta charset="utf-8" />
-	<title>Search</title>
-	<link rel="icon" type="image/x-icon" href="/images/myBall.ico">
-	<link href="/css/style.css" rel="stylesheet" type="text/css">
-	<link rel="preconnect" href="https://fonts.googleapis.com">
-	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-	<link href="https://fonts.googleapis.com/css2?family=Gideon+Roman&family=Oswald&display=swap" 
-		rel="stylesheet"> 
-</head>
+  <body>
+    <h1>Search</h1>
+    <form
+      action="/searchConfirmation"
+      method="post"
+      onsubmit="return validate()"
+    >
+      <fieldset id="semiBackground">
+        <label><strong>Name:</strong> <input type="text" name="name" /></label
+        ><br />
+        <label><strong>Form:*</strong> <input type="text" name="form" /></label
+        ><br />
 
-<body>
-	<h1>Search</h1>
-	<form action="/searchConfirmation" method="post" onsubmit="return validate()">
-		<fieldset id="semiBackground">
-            
-			<label><strong>Name:</strong> <input type="text" name="name"/></label><br>
-			<label><strong>Form:*</strong> <input type="text" name="form"/></label><br>
-			
+        <br />
+        <table border="1" class="tbl">
+          <tr>
+            <th>Some Popular Pokemon</th>
+            <td>charizard</td>
+            <td>gengar</td>
+            <td>arcanine</td>
+            <td>eevee</td>
+            <td>dragonite</td>
+            <td>squirtle</td>
+            <td>bulbasaur</td>
+          </tr>
+          <tr>
+            <th>Personal Favorites</th>
+            <td>mudkip</td>
+            <td>wooper</td>
+            <td>quagsire</td>
+            <td>trubbish</td>
+            <td>stufful</td>
+            <td>lickitung</td>
+            <td>munchlax</td>
+          </tr>
+        </table>
+        <a
+          href="https://bulbapedia.bulbagarden.net/wiki/List_of_Pok%C3%A9mon_by_National_Pok%C3%A9dex_number"
+          >More Pokemon</a
+        >
+        <br />
+        *Note: the form field should be left blank for most pokemon.<br />
+        It is used to define different forms like defense form deoxys<br />
+        and to signify if a pokemon is from the alola region like alolan
+        rattata<br />
+        example use: search: deoxys, form: defense<br />
+        example use: search: rattata, form: alola<br />
+        Please be aware that the PokeAPI is not fully up to date on gen8 pokemon
+        as of 06/2022
+      </fieldset>
 
-			<br>
-			<table border="1" class="tbl">
-				<tr>
-					<th>
-						Some Popular Pokemon
-					</th>
-					<td>charizard</td>
-					<td>gengar</td>
-					<td>arcanine</td>
-					<td>eevee</td>
-					<td>dragonite</td><td>squirtle</td><td>bulbasaur</td>
-				</tr>
-				<tr>
-					<th>
-						Personal Favorites
-					</th>
-					<td>mudkip</td><td>wooper</td><td>quagsire</td><td>trubbish</td><td>stufful</td>
-					<td>lickitung</td><td>munchlax</td>
-				</tr>
-			</table>
-			<a href="https://bulbapedia.bulbagarden.net/wiki/List_of_Pok%C3%A9mon_by_National_Pok%C3%A9dex_number">More Pokemon</a>
-			<br>
-			*Note: the form field should be left blank for most pokemon.<br>
-			It is used to define different forms like defense form deoxys<br>
-			and to signify if a pokemon is from the alola region like alolan rattata<br>
-			example use: search: deoxys, form: defense<br>
-			example use: search: rattata, form: alola<br>
-			Please be aware that the PokeAPI is not fully up to date on gen8 pokemon as of 06/08/2022
-			
-		</fieldset>
-
-		<br>
-		<input type="reset" />
-		<input type="submit" value="Search"/>
-	</form>
-	<script>
-		/*function validate(){
-			if(window.confirm("Are you sure you want to submit your application?\nYou will not be able to change your information once submitted.")){
-    				return true;
-    			} else {
-
-    				return false;
-    			}
-    		}*/
-	</script>
-	<br>
-	<a href="/">HOME</a>
-	<a href="/viewAll">VIEWALL</a>
-</body>
-
+      <br />
+      <input type="reset" />
+      <input type="submit" value="Search" />
+    </form>
+    <br />
+    <a href="/">HOME</a>
+    <a href="/viewAll">VIEWALL</a>
+  </body>
 </html>

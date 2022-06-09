@@ -1,69 +1,67 @@
 html {
-    font-size: 14px;
-    /*background-color:#8D8741;*/
-    background-color: white;
-    background-image:url(/images/pixel.svg);
-    /*This image comes from https://freesvg.org/1542234092*/
-    background-repeat:no-repeat;
-    /*background-position: center;*/
-    /*background-attachment: scroll;*/
-    background-size:cover;
-    font-family: 'Oswald', serif;
-    /*font-family:  "Crimson Pro", "Times New Roman", sans-serif; */
-    color:#1b1913
+  font-size: 14px;
+  /*background-color:#8D8741;*/
+  background-color: white;
+  background-image: url(/images/pixel.svg);
+  /*This image comes from https://freesvg.org/1542234092*/
+  background-repeat: no-repeat;
+  /*background-position: center;*/
+  /*background-attachment: scroll;*/
+  background-size: cover;
+  font-family: "Oswald", sans-serif;
+  /*font-family:  "Crimson Pro", "Times New Roman", sans-serif; */
+  color: #1b1913;
 }
 
-body{
-    font-size:rem;
-    align-content: center;
-    text-align: center;
+body {
+  font-size: rem;
+  align-content: center;
+  text-align: center;
 }
 
-#semiBackground{
-    background: rgba(200, 200, 200, .65);
+#semiBackground {
+  background: rgba(200, 200, 200, 0.65);
 }
 
-.tbl{
-    margin-left:auto;
-    margin-right:auto;
-    
+.tbl {
+  margin-left: auto;
+  margin-right: auto;
 }
 
-hr{
-    /*border-color:#BC986A;*/
-    border-color:darkslategrey;
+hr {
+  /*border-color:#BC986A;*/
+  border-color: darkslategrey;
 }
 
-table{
-    border-color:#659DBD;
-    /*border: #BC986A solid;*/
-    border: rgb(35, 41, 41) solid;
+table {
+  border-color: #659dbd;
+  /*border: #BC986A solid;*/
+  border: rgb(35, 41, 41) solid;
 }
 
-
-fieldset{
-    width:32rem;
-    margin-left:auto;
-    margin-right:auto;
-    /*border-color:#BC986A;*/
-    background: rgba(200, 200, 200, .65);
-    border-color: darkslategrey;
+fieldset {
+  width: 32rem;
+  margin-left: auto;
+  margin-right: auto;
+  /*border-color:#BC986A;*/
+  background: rgba(200, 200, 200, 0.65);
+  border-color: darkslategrey;
 }
 
 a {
-    color: darkblue;
-    padding: .1rem .3rem;
-    text-transform: uppercase;
-  }
-  
-  a:hover {
-    background-color: rgb(131, 130, 130);
-  }
-  
-  a:active {
-    background-color: black;
-  }
-  
-  a:visited {
-    color: blue;
-  }
+  color: darkblue;
+  padding: 0.1rem 0.3rem;
+  text-transform: uppercase;
+}
+
+a:hover {
+  background-color: rgb(131, 130, 130);
+}
+
+a:active {
+  background-color: black;
+}
+
+a:visited {
+  color: blue;
+}
